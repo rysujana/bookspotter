@@ -1,0 +1,27 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>{% block title %}BookSpotter{% endblock %}</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      {% tailwind_css %}
+   </head>
+   <body class="bg-gray-50 font-serif leading-normal tracking-normal overflow-x-hidden">
+      <div class="fixed w-full top-0 z-40 bg-blue-900">
+         <div class="flex items-center w-full max-w-5xl mx-auto py-2">
+            <div class="flex items-center">
+               <h1 class="text-2xl font-bold text-white">BookSpotter</h1>
+            </div>
+            <div class="flex ml-auto">
+               <span class="text-base text-white">Home</span>
+               <span class="ml-4 text-base text-white">About</span>
+            </div>
+         </div>
+      </div>
+      <div class="container mx-auto mt-16 max-w-5xl">
+         {% block content %}{% endblock %}
+      </div>
+   </body>
+</html>
