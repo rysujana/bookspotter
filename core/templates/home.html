@@ -21,7 +21,7 @@
          <div class="p-4 bg-white hover:rounded-lg hover:shadow-md hover:scale-110 duration-500">
             <a href="/book/{{ random_book.book_iri }}">
                <img src="{{ random_book.image }}" alt="Cover {{ random_book.title|truncatechars:50 }}" class="mb-2 rounded-md w-full h-40 object-cover">
-               <h2 class="text-lg font-semibold">{{ random_book.title|truncatechars:50 }}</h2>
+               <h2 class="text-lg font-semibold line-clamp-2">{{ random_book.title }}</h2>
             </a>
             <p class="text-sm mt-2">{{ random_book.authors|truncatechars:50 }}</p>
          </div>
@@ -29,23 +29,94 @@
       </div>
       <div class="container relative mx-auto mt-8">
          <h2 class="text-2xl font-semibold mb-4 text-center">Explore More with BookSpotter</h2>
-         <div class="flex justify-center flex-wrap">
+         <div class="flex justify-center flex-wrap" id="book-container">
             {% for book in books %}
             <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4 hover:scale-110 hover:shadow-md duration-500">
                <div class="card">
                   <a href="/book/{{ book.book_iri }}">
                      <img src="{{ book.image }}" alt="Cover {{ book.title|truncatechars:50 }}" class="mb-2 rounded-md w-full h-40 object-cover">
-                     <h2 class="text-lg font-semibold">{{ book.title|truncatechars:50 }}</h2>
+                     <h2 class="text-lg font-semibold line-clamp-2">{{ book.title }}</h2>
                   </a>
-                  <p class="text-sm mt-2">{{ book.authors|truncatechars:50 }}</p>
+                  <p class="text-sm mt-2">{{ book.authors }}</p>
                </div>
             </div>
             {% endfor %}
          </div>
       </div>
       <div class="text-center mt-2 mb-4">
-         <button id="loadMoreBtn" class="px-4 py-2 text-white rounded-md bg-blue-800">Load More</button>
+         <button id="loadMoreBtn" class="px-4 py-2 text-white rounded-md bg-blue-800">
+            Load More
+         </button>
       </div>
    </div>
 </div>
+
+<script type="text/javascript">
+   let offset = 12;
+
+   async function load_more() {
+      const btn = document.getElementById("loadMoreBtn");
+      btn.disabled = true;
+      btn.innerText = "Loading...";
+      btn.classList.add("cursor-not-allowed", "animate-pulse");
+
+      await fetch(`/load_more_books?offset=${offset}`)
+      .then(response => response.json())
+      .then(data => {
+         console.log(data);
+         const new_books = data.books;
+         const is_end = data.end_of_data;
+         console.log(new_books);
+
+         if (is_end) {
+            document.getElementById("loadMoreBtn").style.display = "none";
+         }
+
+         const book_container = document.getElementById("book-container");
+         new_books.forEach(book => {
+            book_container.appendChild(create_book(book));
+         });
+
+         btn.disabled = false;
+         btn.innerText = "Load More";
+         btn.classList.remove("cursor-not-allowed", "animate-pulse");
+      });
+   }
+
+   function create_book(book) {
+      const book_div = document.createElement("div");
+      book_div.classList.add("w-full", "sm:w-1/2", "md:w-1/3", "lg:w-1/4", "xl:w-1/4", "p-4", "hover:scale-110", "hover:shadow-md", "duration-500");
+
+      const card_div = document.createElement("div");
+      card_div.classList.add("card");
+
+      const book_link = document.createElement("a");
+      book_link.href = `/book/${book.book_iri}`;
+
+      const book_image = document.createElement("img");
+      book_image.src = book.image;
+      book_image.alt = `Cover ${book.title}`;
+      book_image.classList.add("mb-2", "rounded-md", "w-full", "h-40", "object-cover");
+
+      const book_title = document.createElement("h2");
+      book_title.classList.add("text-lg", "font-semibold", "line-clamp-2");
+      book_title.innerText = book.title;
+
+      const book_authors = document.createElement("p");
+      book_authors.classList.add("text-sm", "mt-2");
+      book_authors.innerText = book.authors;
+
+      book_link.appendChild(book_image);
+      book_link.appendChild(book_title);
+      card_div.appendChild(book_link);
+      card_div.appendChild(book_authors);
+      book_div.appendChild(card_div);
+
+      offset += 1;
+
+      return book_div;
+   }
+
+   document.getElementById("loadMoreBtn").addEventListener("click", load_more);
+</script>
 {% endblock %}
