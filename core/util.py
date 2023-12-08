@@ -114,7 +114,7 @@ def query_graph_iri(iri):
         optional {{ 
             ?book_iri prop:weight [
                 prop:unit ?weight_unit ;
-                prop:value ?wight_value
+                prop:value ?weight_value
             ] .    
         }} .
         optional {{ ?book_iri prop:isbn ?isbn }} .
