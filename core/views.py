@@ -16,10 +16,12 @@ def search_results(request):
     search_query = request.GET.get('query')
     sort_by = request.GET.get('sort')
 
+    random_books = query_graph_min(limit=3, is_random=True)
     books = query_graph_min(title=search_query, author=search_query, sort_by=sort_by)
 
     query_get_parameters = "+".join(search_query.split())
-    return render(request, 'search_results.html', {'query_result': books, 'query_param': query_get_parameters})
+    return render(request, 'search_results.html', {
+        'query_result': books, 'query_param': query_get_parameters, 'random_books': random_books})
 
 
 def book_detail(request, iri):
