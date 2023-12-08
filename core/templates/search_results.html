@@ -17,51 +17,43 @@
    </div>
    <div class="absolute left-1/2 transform -translate-x-1/2 mx-auto max-w-5xl">
       <div class="flex -mt-16 bg-white rounded-lg shadow-md">
-         <div class="p-4">
-            <img src="https://picsum.photos/600/300" alt="Book Cover 1" class="mb-2 rounded-md w-full h-40 object-cover">
-            <h2 class="text-lg font-semibold">Book Title 1</h2>
-            <p class="text-sm mt-2">Author Name</p>
+         {% for random_book in random_books %}
+         <div class="p-4 bg-white hover:rounded-lg hover:shadow-md hover:scale-110 duration-500">
+            <a href="/book/{{ random_book.book_iri }}">
+               <img src="{{ random_book.image }}" alt="Cover {{ random_book.title|truncatechars:50 }}" class="mb-2 rounded-md w-full h-40 object-cover">
+               <h2 class="text-lg font-semibold line-clamp-2">{{ random_book.title }}</h2>
+            </a>
+            <p class="text-sm mt-2">{{ random_book.authors|truncatechars:50 }}</p>
          </div>
-         <div class="p-4">
-            <img src="https://picsum.photos/600/301" alt="Book Cover 2" class="mb-2 rounded-md w-full h-40 object-cover">
-            <h2 class="text-lg font-semibold">Book Title 2</h2>
-            <p class="text-sm mt-2">Author Name</p>
-         </div>
-         <div class="p-4">
-            <img src="https://picsum.photos/600/302" alt="Book Cover 3" class="mb-2 rounded-md w-full h-40 object-cover">
-            <h2 class="text-lg font-semibold">Book Title 3</h2>
-            <p class="text-sm mt-2">Author Name</p>
-         </div>
+         {% endfor %}
       </div>
       <div class="container relative mx-auto mt-8">
          <h2 class="text-2xl font-semibold mb-4 text-center">Search Results</h2>
-         {% if query_result %}
          <div class="flex justify-end items-center">
             <h6 class="font-semibold mr-4">Urutkan:</h6>
-            <div x-data="{ open: false }" class="relative inline-block text-left">
-               <button @click="open = !open" class="inline-flex justify-center items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring focus:border-blue-300 focus:ring-blue-200 active:bg-gray-200 active:text-gray-800 transition ease-in-out duration-150">
-                   Abjad (A-Z)
-                   <svg class="-mr-1 ml-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                       <path fill-rule="evenodd" d="M10 12l-8-8 1.5-1.5L10 9l6.5-6.5L18 4l-8 8z" clip-rule="evenodd" />
-                   </svg>
+            <div x-data="{ open: false }" class="relative inline-block text-left mr-4">
+               <button @click="open = !open" class="w-40 inline-flex justify-between items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring focus:border-blue-300 focus:ring-blue-200 active:bg-gray-200 active:text-gray-800 transition ease-in-out duration-150">
+                  Abjad (A-Z)
+                  <svg class="-mr-1 ml-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                     <path fill-rule="evenodd" d="M10 12l-8-8 1.5-1.5L10 9l6.5-6.5L18 4l-8 8z" clip-rule="evenodd" />
+                  </svg>
                </button>
-           
-               <div x-show="open" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                   <div class="py-1">
-                       <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ascending</a>
-                       <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Descending</a>
-                   </div>
+               <div x-show="open" class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div class="py-1">
+                     <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ascending</a>
+                     <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Descending</a>
+                  </div>
                </div>
-           </div>           
-          </div>             
-         <div class="flex justify-start flex-wrap">
+            </div>
+         </div>         
+         <div class="flex justify-start flex-wrap mt-2" id="book-container">
             {% for book in query_result %}
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
+            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4 hover:scale-110 hover:shadow-md duration-500">
                <div class="card">
-                  <div class="aspect-w-856 aspect-h-1360">
-                     <img src="{{ book.image|default:'http://lgimages.s3.amazonaws.com/nc-md.gif' }}" alt="{{ book.title }}" class="rounded-md object-cover">
-                 </div>
-                 <h2 class="text-base font-semibold line-clamp-2">{{ book.title }}</h2>
+                  <a href="/book/{{ book.book_iri }}">
+                     <img src="{{ book.image }}" alt="Cover {{ book.title|truncatechars:50 }}" class="mb-2 rounded-md w-full h-40 object-cover">
+                     <h2 class="text-base font-semibold line-clamp-2">{{ book.title }}</h2>
+                  </a>
                   <p class="text-sm mt-2 text-gray-600">{{ book.authors }}</p>
                </div>
             </div>
@@ -69,16 +61,79 @@
          </div>
       </div>
       <div class="text-center mt-2 mb-4">
-         <button id="loadMoreBtn" class="px-4 py-2 text-white rounded-md bg-blue-800">Load More</button>
+         <button id="loadMoreBtn" class="px-4 py-2 text-white rounded-md bg-blue-800">
+            Load More
+         </button>
       </div>
-      {% else %}
-      <p class="text-center text-lg mt-8">
-         No results for "{{ request.GET.query|default:'' }}".
-      </p>
-      <p class="text-center text-lg">
-         Try checking your spelling or use more general terms.
-      </p>
-      {% endif %}
    </div>
 </div>
+
+<script type="text/javascript">
+   let offset = 12;
+
+   async function load_more() {
+      const btn = document.getElementById("loadMoreBtn");
+      btn.disabled = true;
+      btn.innerText = "Loading...";
+      btn.classList.add("cursor-not-allowed", "animate-pulse");
+
+      await fetch(`/load_more_books?offset=${offset}`)
+      .then(response => response.json())
+      .then(data => {
+         console.log(data);
+         const new_books = data.books;
+         const is_end = data.end_of_data;
+         console.log(new_books);
+
+         if (is_end) {
+            document.getElementById("loadMoreBtn").style.display = "none";
+         }
+
+         const book_container = document.getElementById("book-container");
+         new_books.forEach(book => {
+            book_container.appendChild(create_book(book));
+         });
+
+         btn.disabled = false;
+         btn.innerText = "Load More";
+         btn.classList.remove("cursor-not-allowed", "animate-pulse");
+      });
+   }
+
+   function create_book(book) {
+      const book_div = document.createElement("div");
+      book_div.classList.add("w-full", "sm:w-1/2", "md:w-1/3", "lg:w-1/4", "xl:w-1/4", "p-4", "hover:scale-110", "hover:shadow-md", "duration-500");
+
+      const card_div = document.createElement("div");
+      card_div.classList.add("card");
+
+      const book_link = document.createElement("a");
+      book_link.href = `/book/${book.book_iri}`;
+
+      const book_image = document.createElement("img");
+      book_image.src = book.image;
+      book_image.alt = `Cover ${book.title}`;
+      book_image.classList.add("mb-2", "rounded-md", "w-full", "h-40", "object-cover");
+
+      const book_title = document.createElement("h2");
+      book_title.classList.add("text-lg", "font-semibold", "line-clamp-2");
+      book_title.innerText = book.title;
+
+      const book_authors = document.createElement("p");
+      book_authors.classList.add("text-sm", "mt-2");
+      book_authors.innerText = book.authors;
+
+      book_link.appendChild(book_image);
+      book_link.appendChild(book_title);
+      card_div.appendChild(book_link);
+      card_div.appendChild(book_authors);
+      book_div.appendChild(card_div);
+
+      offset += 1;
+
+      return book_div;
+   }
+
+   document.getElementById("loadMoreBtn").addEventListener("click", load_more);
+</script>
 {% endblock %}
