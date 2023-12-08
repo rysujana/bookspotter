@@ -5,9 +5,10 @@ from .util import query_graph_iri, query_graph_min
 
 def home(request):
     sort_by = request.GET.get('sort')
-    
+    filter_by = request.GET.get('filter')
+
     random_books = query_graph_min(limit=3, is_random=True)
-    books = query_graph_min(sort_by=sort_by)
+    books = query_graph_min(sort_by=sort_by, filter_by=filter_by)
 
     return render(request, 'home.html', {'random_books': random_books, 'books': books})
 
