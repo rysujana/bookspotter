@@ -4,6 +4,9 @@ sparql = SPARQLWrapper(
 )
 sparql.setReturnFormat(JSON)
 
+sparql_dbo = SPARQLWrapper("http://dbpedia.org/sparql")
+sparql_dbo.setReturnFormat(JSON)
+
 PREFIX = """
     prefix :      <http://localhost:3333/data#>
     prefix owl:   <http://www.w3.org/2002/07/owl#>
@@ -95,7 +98,8 @@ def query_graph_min(title=None, author=None, sort_by=None, filter_by=None, limit
 
 def query_graph_iri(iri):
     query = PREFIX + f"""
-    select ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image ?link ?publisher ?publish_date ?dim_unit ?depth_value ?width_value ?length_value ?weight_unit ?weight_value ?isbn ?avg_rating ?n_reviews ?link ?price where {{
+    select ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image ?link ?publisher ?publish_date ?dim_unit ?depth_value ?width_value ?length_value ?weight_unit ?weight_value ?isbn ?avg_rating ?n_reviews ?link ?price ?abstract 
+    where {{
         ?book_iri rdf:type :Book ;
             rdfs:label ?title .
         
@@ -140,9 +144,40 @@ def query_graph_iri(iri):
         }} .
 
         filter(?book_iri = :{iri})
-    }} group by ?book_iri ?title ?image ?link ?publisher ?publish_date ?dim_unit ?depth_value ?width_value ?length_value ?weight_unit ?weight_value ?isbn ?avg_rating ?n_reviews ?link ?price
+    }} group by ?book_iri ?title ?image ?link ?publisher ?publish_date ?dim_unit ?depth_value ?width_value ?length_value ?weight_unit ?weight_value ?isbn ?avg_rating ?n_reviews ?link ?price ?abstract
     """
 
     sparql.setQuery(query)
     result = sparql.queryAndConvert()
-    return process_query_result(result)
+    result = process_query_result(result)
+
+    
+    
+    book_isbn = result[0].get("isbn")
+    if not book_isbn:
+        return result
+    
+    dbo_query = f"""
+    prefix dbo: <http://dbpedia.org/ontology/>
+    prefix dbp: <http://dbpedia.org/property/>
+    select ?abstract
+    where {{
+        ?book a dbo:Book .
+        ?book dbo:abstract ?abstract .
+        ?book dbo:isbn ?raw_isbn .
+
+        bind(replace('{book_isbn}' , '-', '') as ?my_isbn) .
+        bind(replace(?raw_isbn , '-', '') as ?db_isbn) .
+
+        filter (str(?my_isbn) = str(?db_isbn)) .
+        filter (lang(?abstract) = 'en') .
+    }}
+    """
+    sparql_dbo.setQuery(dbo_query)
+    dbo_result = sparql_dbo.queryAndConvert()
+    dbo_result = process_query_result(dbo_result)
+
+    if len(dbo_result) > 0:
+        result[0]["abstract"] = dbo_result[0]["abstract"]
+
+    return result

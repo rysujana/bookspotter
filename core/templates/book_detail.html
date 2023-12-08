@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 <div class="flex flex-col md:flex-row h-auto">
-   <div class="relative w-2/5 h-3/5 flex self-center md:self-start">
+   <div class="relative w-/5 h-3/5 flex self-center md:self-start">
       <img class="self-center md:self-start w-32 h-48 md:w-48 md:h-64 lg:w-72 lg:h-2/5 border border-gray-300 rounded" 
            alt="Book Cover"
            src="{{ book.image }}">
@@ -69,5 +69,10 @@
          </a>
       </div>
    </div>
+</div>
+<div class="mt-6">
+   <p>
+      {{ book.abstract }}
+   </p>
 </div>
 {% endblock %}
