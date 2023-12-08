@@ -17,7 +17,7 @@
             {{ book.authors }}
          </p>
          <p class="text-3xl hidden lg:flex font-bold text-orange-400 pt-2">
-            ${{ book.price|default:"-" }}
+            ${{ book.price }}
          </p>
          <p class="pt-4 text-gray-600">
             <span class="font-bold">Average Rating:</span> {{ book.avg_rating|default:"-" }}

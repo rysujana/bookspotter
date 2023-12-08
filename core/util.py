@@ -29,6 +29,8 @@ def process_query_result(result):
             else:
                 dct[key] = value["value"]
 
+        if "image" not in dct:
+            dct["image"] = "https://via.placeholder.com/150x200.png?text=No+Image"
         results.append(dct)
 
     return results
@@ -146,8 +148,6 @@ def query_graph_iri(iri):
     result = sparql.queryAndConvert()
     result = process_query_result(result)
 
-    
-    
     book_isbn = result[0].get("isbn")
     if not book_isbn:
         return result
