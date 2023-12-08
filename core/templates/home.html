@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 <div class="absolute top-0 left-0 w-screen h-140">
-   <img src="{% static 'banner.png' %}" class="w-full object-cover h-full">
+   <img src="{% static 'banner.png' %}" alt="Banner" class="w-full object-cover h-full">
    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white z-10">
       <p class="text-3xl font-bold">
          Discover a World of Knowledge with BookSpotter
@@ -17,109 +17,30 @@
    </div>
    <div class="absolute left-1/2 transform -translate-x-1/2 mx-auto max-w-5xl">
       <div class="flex -mt-16 bg-white rounded-lg shadow-md">
-         <div class="p-4">
-            <img src="https://picsum.photos/600/300" alt="Book Cover 1" class="mb-2 rounded-md w-full h-40 object-cover">
-            <h2 class="text-lg font-semibold">Book Title 1</h2>
-            <p class="text-sm mt-2">Author Name</p>
+         {% for random_book in random_books %}
+         <div class="p-4 bg-white hover:rounded-lg hover:shadow-md hover:scale-110 duration-500">
+            <a href="/book/{{ random_book.book_iri }}">
+               <img src="{{ random_book.image }}" alt="Cover {{ random_book.title|truncatechars:50 }}" class="mb-2 rounded-md w-full h-40 object-cover">
+               <h2 class="text-lg font-semibold">{{ random_book.title|truncatechars:50 }}</h2>
+            </a>
+            <p class="text-sm mt-2">{{ random_book.authors|truncatechars:50 }}</p>
          </div>
-         <div class="p-4">
-            <img src="https://picsum.photos/600/301" alt="Book Cover 2" class="mb-2 rounded-md w-full h-40 object-cover">
-            <h2 class="text-lg font-semibold">Book Title 2</h2>
-            <p class="text-sm mt-2">Author Name</p>
-         </div>
-         <div class="p-4">
-            <img src="https://picsum.photos/600/302" alt="Book Cover 3" class="mb-2 rounded-md w-full h-40 object-cover">
-            <h2 class="text-lg font-semibold">Book Title 3</h2>
-            <p class="text-sm mt-2">Author Name</p>
-         </div>
+         {% endfor %}
       </div>
       <div class="container relative mx-auto mt-8">
          <h2 class="text-2xl font-semibold mb-4 text-center">Explore More with BookSpotter</h2>
          <div class="flex justify-center flex-wrap">
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
+            {% for book in books %}
+            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4 hover:scale-110 hover:shadow-md duration-500">
                <div class="card">
-                  <img src="https://placekitten.com/600/300" alt="Book Cover 1" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">The Cat Chronicles</h2>
-                  <p class="text-sm mt-2">Whisker McWhiskerface</p>
+                  <a href="/book/{{ book.book_iri }}">
+                     <img src="{{ book.image }}" alt="Cover {{ book.title|truncatechars:50 }}" class="mb-2 rounded-md w-full h-40 object-cover">
+                     <h2 class="text-lg font-semibold">{{ book.title|truncatechars:50 }}</h2>
+                  </a>
+                  <p class="text-sm mt-2">{{ book.authors|truncatechars:50 }}</p>
                </div>
             </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/601/301" alt="Book Cover 2" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Paws and Reflections</h2>
-                  <p class="text-sm mt-2">Fluffy Purrington</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/602/302" alt="Book Cover 3" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Whisker's Mystery</h2>
-                  <p class="text-sm mt-2">Shadow Detective</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/600/300" alt="Book Cover 1" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">The Cat Chronicles</h2>
-                  <p class="text-sm mt-2">Whisker McWhiskerface</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/601/301" alt="Book Cover 2" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Paws and Reflections</h2>
-                  <p class="text-sm mt-2">Fluffy Purrington</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/602/302" alt="Book Cover 3" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Whisker's Mystery</h2>
-                  <p class="text-sm mt-2">Shadow Detective</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/600/300" alt="Book Cover 1" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">The Cat Chronicles</h2>
-                  <p class="text-sm mt-2">Whisker McWhiskerface</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/601/301" alt="Book Cover 2" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Paws and Reflections</h2>
-                  <p class="text-sm mt-2">Fluffy Purrington</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/602/302" alt="Book Cover 3" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Whisker's Mystery</h2>
-                  <p class="text-sm mt-2">Shadow Detective</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/600/300" alt="Book Cover 1" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">The Cat Chronicles</h2>
-                  <p class="text-sm mt-2">Whisker McWhiskerface</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/601/301" alt="Book Cover 2" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Paws and Reflections</h2>
-                  <p class="text-sm mt-2">Fluffy Purrington</p>
-               </div>
-            </div>
-            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
-               <div class="card">
-                  <img src="https://placekitten.com/602/302" alt="Book Cover 3" class="mb-2 rounded-md w-full h-40 object-cover">
-                  <h2 class="text-lg font-semibold">Whisker's Mystery</h2>
-                  <p class="text-sm mt-2">Shadow Detective</p>
-               </div>
-            </div>
+            {% endfor %}
          </div>
       </div>
       <div class="text-center mt-2 mb-4">

@@ -15,49 +15,123 @@ g = rdflib.Graph()
 g.parse("static/data/Book_v2.ttl")
 
 def home(request):
-    return render(request, 'home.html')
-
-def search_results(request):
-    if request.method == 'GET':
-        input_get = request.GET.get('query')
-        query = prefix+"""
-    select ?judul_buku (group_concat(distinct ?nama_author; SEPARATOR=", ") AS ?authors) ?image where {{
-        ?buku rdf:type :Book ;
-            rdfs:label ?judul_buku ;
+    sort_by = request.GET.get('sort')
+    
+    random_query = prefix+"""
+    select distinct ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image 
+    where {
+        ?book_iri rdf:type :Book ;
+            rdfs:label ?title ;
             prop:image ?image ;
             prop:written_by ?author .
         
         ?author rdf:type :Author ;
-            prop:name ?nama_author .
+            prop:name ?author_name .
+    } group by ?title ?image
+    order by rand()
+    limit 3
+    """
+    random_books = g.query(random_query)
+    random_books = process_query_result(random_books)
+
+    if sort_by == "title_asc":
+        sorting_query = "order by ?title"
+    elif sort_by == "title_desc":
+        sorting_query = "order by desc(?title)"
+    else:
+        sorting_query = ""
+
+    books_query = prefix+f"""
+    select distinct ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image
+    where {{
+        ?book_iri rdf:type :Book ;
+            rdfs:label ?title ;
+            prop:image ?image ;
+            prop:written_by ?author .
         
-        filter(regex(?judul_buku, "{}", "i")||regex(?nama_author, "{}", "i"))
-    }} group by ?judul_buku ?image
+        ?author rdf:type :Author ;
+            prop:name ?author_name .
+    }} group by ?title ?image
+    {sorting_query}
+    limit 12
+    """
+    books = g.query(books_query)
+    books = process_query_result(books)
+
+    return render(request, 'home.html', {'random_books': random_books, 'books': books})
+
+def search_results(request):
+    input_get = request.GET.get('query')
+    if input_get is None or input_get == "":
+        return redirect('home')
+
+    query = prefix+"""
+    select ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image 
+    where {{
+        ?book_iri rdf:type :Book ;
+            rdfs:label ?title ;
+            prop:image ?image ;
+            prop:written_by ?author .
+        
+        ?author rdf:type :Author ;
+            prop:name ?author_name .
+        
+        filter(regex(?title, "{}", "i")||regex(?author_name, "{}", "i"))
+    }} group by ?title ?image
     """.format(input_get, input_get)
-        
-        
-        try:
-            result = g.query(query)
-            query_result = process_query_result(result)
-            return render(request, 'search_results.html', {'query_result': query_result})
-        except Exception as e:
-            print(e)
+    
+    result = g.query(query)
+    query_result = process_query_result(result)
+    return render(request, 'search_results.html', {'query_result': query_result})
 
-        return render(request, 'search_results.html')
-
-    return render(request, 'search_results.html')
 
 def book_detail(request):
-
     return render(request, 'book_detail.html')
+
+def load_more_books(request):
+    sort_by = request.GET.get('sort')
+    offset = int(request.GET.get('offset'))
+    limit = 12
+
+    if sort_by == "title_asc":
+        sorting_query = "order by ?title"
+    elif sort_by == "title_desc":
+        sorting_query = "order by desc(?title)"
+    else:
+        sorting_query = ""
+
+    books_query = prefix+f"""
+    select distinct ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image
+    where {{
+        ?book_iri rdf:type :Book ;
+            rdfs:label ?title ;
+            prop:image ?image ;
+            prop:written_by ?author .
+        
+        ?author rdf:type :Author ;
+            prop:name ?author_name .
+    }} group by ?title ?image
+    {sorting_query}
+    limit {limit}
+    offset {offset}
+    """
+    books = g.query(books_query)
+    books = process_query_result(books)
+    
+    end_of_data = False if len(books) == limit else True
+    return JsonResponse({"books": books, "end_of_data": end_of_data})
 
 def process_query_result(qres):
     list_of_dct = []
 
     for row in qres:
         dct = {}
-        dct["judul_buku"] = row.judul_buku.toPython()
-        dct["authors"] = row.authors.toPython()
-        dct["image"] = row.image.toPython()
+        row = row.asdict()
+        for key, value in row.items():
+            if key == "book_iri":
+                iri = value.toPython().split("#")[1]
+                dct[key] = iri
+            dct[key] = value.toPython()
 
         list_of_dct.append(dct)
     
