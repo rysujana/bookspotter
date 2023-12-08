@@ -29,7 +29,24 @@
       </div>
       <div class="container relative mx-auto mt-8">
          <h2 class="text-2xl font-semibold mb-4 text-center">Explore More with BookSpotter</h2>
-         <div class="flex justify-center flex-wrap" id="book-container">
+         <div class="flex justify-end items-center">
+            <h6 class="font-semibold mr-4">Urutkan:</h6>
+            <div x-data="{ open: false }" class="relative inline-block text-left mr-4">
+               <button @click="open = !open" class="w-40 inline-flex justify-between items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring focus:border-blue-300 focus:ring-blue-200 active:bg-gray-200 active:text-gray-800 transition ease-in-out duration-150">
+                  Abjad (A-Z)
+                  <svg class="-mr-1 ml-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                     <path fill-rule="evenodd" d="M10 12l-8-8 1.5-1.5L10 9l6.5-6.5L18 4l-8 8z" clip-rule="evenodd" />
+                  </svg>
+               </button>
+               <div x-show="open" class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div class="py-1">
+                     <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ascending</a>
+                     <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Descending</a>
+                  </div>
+               </div>
+            </div>
+         </div>         
+         <div class="flex justify-center flex-wrap mt-2" id="book-container">
             {% for book in books %}
             <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4 hover:scale-110 hover:shadow-md duration-500">
                <div class="card">
