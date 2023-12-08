@@ -21,7 +21,7 @@ def search_results(request):
     if request.method == 'GET':
         input_get = request.GET.get('query')
         query = prefix+"""
-    select ?judul_buku ?nama_author ?image where {{
+    select ?judul_buku (group_concat(distinct ?nama_author; SEPARATOR=", ") AS ?authors) ?image where {{
         ?buku rdf:type :Book ;
             rdfs:label ?judul_buku ;
             prop:image ?image ;
@@ -31,7 +31,7 @@ def search_results(request):
             prop:name ?nama_author .
         
         filter(regex(?judul_buku, "{}", "i")||regex(?nama_author, "{}", "i"))
-    }}
+    }} group by ?judul_buku ?image
     """.format(input_get, input_get)
         
         
@@ -47,6 +47,7 @@ def search_results(request):
     return render(request, 'search_results.html')
 
 def book_detail(request):
+
     return render(request, 'book_detail.html')
 
 def process_query_result(qres):
@@ -55,7 +56,7 @@ def process_query_result(qres):
     for row in qres:
         dct = {}
         dct["judul_buku"] = row.judul_buku.toPython()
-        dct["nama_author"] = row.nama_author.toPython()
+        dct["authors"] = row.authors.toPython()
         dct["image"] = row.image.toPython()
 
         list_of_dct.append(dct)
