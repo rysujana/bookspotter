@@ -23,25 +23,27 @@ def search_results(request):
         print(input_get)
         dict_result = {}
         query = prefix+"""
-            select ?judul_buku ?nama_author ?link where {{
-                ?buku rdf:type :Book ;
-                        rdfs:label ?judul_buku ;
-                        prop:link ?link ;
-                        prop:written_by ?author .
-                
-                ?author rdf:type :Author ;
-                        prop:name	?nama_author .
-                
-                filter(regex(?judul_buku, "{}", "i")||regex(?nama_author, "{}", "i"))
-            }}
-            """.format(input_get, input_get)
+    select ?judul_buku ?nama_author ?link where {{
+        ?buku rdf:type :Book ;
+                rdfs:label ?judul_buku ;
+                prop:link ?link ;
+                prop:written_by ?author .
+        
+        ?author rdf:type :Author ;
+                prop:name	?nama_author .
+        
+        filter(regex(?judul_buku, "{}", "i")||regex(?nama_author, "{}", "i"))
+    }}
+    """.format(input_get, input_get)
         
         try:
             print("test")
+            print(g)
+            print(query)
             result = g.query(query)
             print(result)
         except (Exception):
-            return "SPARQL Error!"
+            print("Error")
 
         return render(request, 'search_results.html')
 
