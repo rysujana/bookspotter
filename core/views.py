@@ -63,8 +63,6 @@ def home(request):
 
 def search_results(request):
     input_get = request.GET.get('query')
-    if input_get is None or input_get == "":
-        return redirect('home')
 
     query = prefix+"""
     select ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image 
