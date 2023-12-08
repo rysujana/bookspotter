@@ -4,24 +4,26 @@
 {% load static %}
 <div class="flex flex-col md:flex-row h-auto">
    <div class="relative w-2/5 h-3/5 flex self-center md:self-start">
-      <img class="self-center md:self-start w-32 h-48 md:w-48 md:h-64 lg:w-72 lg:h-2/5 border border-gray-300 rounded" src="https://placekitten.com/400/638">
+      <img class="self-center md:self-start w-32 h-48 md:w-48 md:h-64 lg:w-72 lg:h-2/5 border border-gray-300 rounded" 
+           alt="Book Cover"
+           src="{{ book.image }}">
    </div>
    <div class="p-4 md:ml-5 md:p-0">
       <div class="border-b-2 border-gray-300 pb-6 md:pb-6 lg:pb-4">
-         <p class="font-bold text-xl md:text-2xl line-clamp-2">
-            Data Analysis Using R (Low Priced Edition): A Primer for Data Scientist
+         <p class="font-bold text-xl md:text-2xl">
+            {{ book.title }}
          </p>
          <p class="pt-1 md:pt-2 text-gray-600">
-            Dr Dhaval Maheta
+            {{ book.authors }}
          </p>
          <p class="text-3xl hidden lg:flex font-bold text-orange-400 pt-2">
-            $6.75
+            ${{ book.price|default:"-" }}
          </p>
          <p class="pt-4 text-gray-600">
-            <span class="font-bold">Average Rating:</span> 4.4
+            <span class="font-bold">Average Rating:</span> {{ book.avg_rating|default:"-" }}
          </p>
          <p class="text-gray-600">
-            <span class="font-bold">Number of Reviews:</span> 23
+            <span class="font-bold">Number of Reviews:</span> {{ book.n_reviews|default:"-" }}
          </p>
       </div>
       <div class="mt-6 md:mt-6 lg:mt-4">
@@ -31,36 +33,36 @@
          <div class="flex flex-col lg:flex-row">
             <div>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Width:</span> 8.5 inches
+                  <span class="font-bold">Width:</span> {{ book.width_value|default:"-" }} {{ book.dim_unit }}
                </p>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Depth:</span> 1.01 inches
+                  <span class="font-bold">Depth:</span> {{ book.depth_value|default:"-" }} {{ book.dim_unit }}
                </p>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Length:</span> 11 inches
+                  <span class="font-bold">Length:</span> {{ book.length_value|default:"-" }} {{ book.dim_unit }}
                </p>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">ISBN-13:</span> 978-1685549596
+                  <span class="font-bold">ISBN-13:</span> {{ book.isbn|default:"-" }}
                </p>
             </div>
             <div class="lg:ml-20">
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Weight:</span> 2.53 pounds
+                  <span class="font-bold">Weight:</span> {{ book.weight_value|default:"-" }} {{ book.weight_unit|default:"" }}
                </p>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Language:</span> English
+                  <span class="font-bold">Language:</span> {{ book.language|default:"-" }}
                </p>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Publisher:</span> Notion Press Media Pvt Ltd
+                  <span class="font-bold">Publisher:</span> {{ book.publisher|default:"-" }}
                </p>
                <p class="pt-2 text-gray-600">
-                  <span class="font-bold">Publish Date:</span> 22-Nov-21
+                  <span class="font-bold">Publish Date:</span> {{ book.publish_date|default:"-" }}
                </p>
             </div>
          </div>
       </div>
       <div class="mt-6">
-         <a href="https://www.amazon.com/Data-Analysis-Using-Low-Priced/dp/1685549594/ref=sr_1_16?keywords=data+analysis&qid=1671164640&sr=8-16" target="_blank" rel="noopener noreferrer">
+         <a href="{{ book.link }}" target="_blank" rel="noopener noreferrer">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                Buy Now
             </button>

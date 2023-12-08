@@ -7,16 +7,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       {% tailwind_css %}
+      <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static '/favicons/favicon-16x16.png' %}">
+      <meta name="msapplication-TileColor" content="#ffffff">
+      <meta name="theme-color" content="#ffffff">
    </head>
    <body class="bg-gray-50 font-serif leading-normal tracking-normal overflow-x-hidden">
       <div class="fixed w-full top-0 z-40 bg-blue-900">
          <div class="flex items-center w-full max-w-5xl mx-auto py-2">
             <div class="flex items-center">
-               <h1 class="text-2xl font-bold text-white">BookSpotter</h1>
+               <a href="{% url 'home' %}" class="text-2xl font-bold text-white">BookSpotter</a>
             </div>
             <div class="flex ml-auto">
-               <span class="text-base text-white">Home</span>
-               <span class="ml-4 text-base text-white">About</span>
+               <a href="{% url 'home' %}" class="text-base text-white">Home</a>
             </div>
          </div>
       </div>
