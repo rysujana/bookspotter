@@ -10,7 +10,8 @@ def home(request):
     random_books = query_graph_min(limit=3, is_random=True)
     books = query_graph_min(sort_by=sort_by, filter_by=filter_by)
 
-    return render(request, 'home.html', {'random_books': random_books, 'books': books})
+    checked = "checked" if filter_by else ""
+    return render(request, 'home.html', {'random_books': random_books, 'books': books, 'checked': checked})
 
 
 def search_results(request):
