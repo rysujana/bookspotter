@@ -48,7 +48,7 @@ def search_results(request):
 
 def book_detail(request):
     if request.method == 'GET':
-        input_request = request.GET.get('iri')
+        input_request = request.GET.get('data')
         input_iri_book = "<http://localhost:3333/data#{}>".format(input_request)
         
         query = prefix+"""
