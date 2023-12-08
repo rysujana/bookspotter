@@ -117,7 +117,7 @@ def load_more_books(request):
     """
     books = g.query(books_query)
     books = process_query_result(books)
-    
+
     end_of_data = False if len(books) == limit else True
     return JsonResponse({"books": books, "end_of_data": end_of_data})
 
@@ -131,7 +131,8 @@ def process_query_result(qres):
             if key == "book_iri":
                 iri = value.toPython().split("#")[1]
                 dct[key] = iri
-            dct[key] = value.toPython()
+            else:
+                dct[key] = value.toPython()
 
         list_of_dct.append(dct)
     
