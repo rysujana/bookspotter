@@ -36,8 +36,9 @@ def process_query_result(result):
     return results
 
 
-def query_graph_min(title=None, author=None, sort_by=None, limit=12, offset=0, is_random=False):
+def query_graph_min(title=None, author=None, sort_by=None, filter_by=None, limit=12, offset=0, is_random=False):
     or_filters = []
+    
     if title:
         title = title.replace('"', '\\"')
         title_query = f'regex(?title, "{title}", "i")'
@@ -62,6 +63,13 @@ def query_graph_min(title=None, author=None, sort_by=None, limit=12, offset=0, i
     if is_random:
         sorting_query = "order by rand()"
 
+    if filter_by == "ratings":
+        query_for_filter = "?book_iri prop:reviews [prop:avg_reviews ?avg_rating]"
+        filter_query = "?avg_rating >= 4"
+        or_filters.append(filter_query)
+    else:
+        query_for_filter = ""
+
     if len(or_filters) > 0:
         or_filters = " || ".join(or_filters)
         or_filters = f"filter({or_filters})"
@@ -72,15 +80,12 @@ def query_graph_min(title=None, author=None, sort_by=None, limit=12, offset=0, i
     select distinct ?book_iri ?title (group_concat(distinct ?author_name; SEPARATOR=", ") AS ?authors) ?image
     where {{
         ?book_iri rdf:type :Book ;
-            rdfs:label ?title .
-        
-        optional {{
-            ?book_iri prop:written_by ?author .
-            ?author rdf:type :Author ;
-                prop:name ?author_name .
-        }} .
-        optional {{ ?book_iri prop:image ?image }} .
-
+            rdfs:label ?title ;
+            prop:image ?image ;
+            prop:written_by ?author .
+        {query_for_filter}
+        ?author rdf:type :Author ;
+            prop:name ?author_name .
         {or_filters}
     }} group by ?book_iri ?title ?image
     {sorting_query}
