@@ -38,7 +38,6 @@ def search_results(request):
         try:
             result = g.query(query)
             query_result = process_query_result(result)
-            print(query_result)
             return render(request, 'search_results.html', {'query_result': query_result})
         except Exception as e:
             print(e)
