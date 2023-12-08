@@ -3,14 +3,14 @@
 {% block content %}
 {% load static %}
 <div class="absolute top-0 left-0 w-screen h-140">
-   <img src="{% static 'banner.png' %}" class="w-full object-cover h-full">
+   <img src="{% static 'banner.png' %}" alt="Banner" class="w-full object-cover h-full">
    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white z-10">
       <p class="text-3xl font-bold">
          Discover a World of Knowledge with BookSpotter
       </p>
       <div class="mt-8">
          <form action="/search" method="GET">
-            <input type="text" name="query" placeholder="Search for books, authors, and more" class="px-4 py-2 rounded-md border-none shadow-md w-10/12 text-black">
+            <input required type="text" name="query" placeholder="Search for books, authors, and more" class="px-4 py-2 rounded-md border-none shadow-md w-10/12 text-black">
             <button type="submit" class="ml-2 px-4 py-2 text-white rounded-md bg-blue-800">Search</button>
          </form>
       </div>
@@ -28,7 +28,7 @@
              </a>
          </div>
          {% endfor %}
-     </div>
+      </div>
       <div class="container relative mx-auto mt-8">
          <h2 class="text-2xl font-semibold mb-4 text-center">Search Results</h2>
          {% if query_result %}
@@ -43,8 +43,14 @@
                </button>
                <div x-show="open" class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div class="py-1">
-                     <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ascending</a>
-                     <a @click="open = false" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Descending</a>
+                     <a @click="open = false" href="{{ request.path }}?query={{ query_param }}&sort=title_asc" 
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Ascending
+                     </a>
+                     <a @click="open = false" href="{{ request.path }}?query={{ query_param }}&sort=title_desc" 
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Descending
+                     </a>
                   </div>
                </div>
             </div>
@@ -88,13 +94,15 @@
       btn.innerText = "Loading...";
       btn.classList.add("cursor-not-allowed", "animate-pulse");
 
-      await fetch(`/load_more_books?offset=${offset}`)
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get("query");
+      const sort = urlParams.get("sort");
+
+      await fetch(`/load_more_books?offset=${offset}&query=${query}&sort=${sort}`)
       .then(response => response.json())
       .then(data => {
-         console.log(data);
          const new_books = data.books;
          const is_end = data.end_of_data;
-         console.log(new_books);
 
          if (is_end) {
             document.getElementById("loadMoreBtn").style.display = "none";
