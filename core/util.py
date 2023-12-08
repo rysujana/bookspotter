@@ -1,3 +1,9 @@
+from SPARQLWrapper import SPARQLWrapper, JSON
+sparql = SPARQLWrapper(
+    "http://N-Slim7:7200/repositories/semweb"
+)
+sparql.setReturnFormat(JSON)
+
 PREFIX = """
     prefix :      <http://localhost:3333/data#>
     prefix owl:   <http://www.w3.org/2002/07/owl#>
@@ -11,21 +17,20 @@ PREFIX = """
 def process_query_result(result):
     results = []
 
-    for row in result:
+    for row in result["results"]["bindings"]:
         dct = {}
-        row = row.asdict()
         for key, value in row.items():
             if key == "book_iri":
-                iri = value.toPython().split("#")[1]
+                iri = value["value"].split("#")[1]
                 dct[key] = iri
             else:
-                dct[key] = value.toPython()
+                dct[key] = value["value"]
 
         results.append(dct)
     return results
 
 
-def query_graph(g, title=None, author=None, sort_by=None, limit=12, offset=0, is_random=False):
+def query_graph(title=None, author=None, sort_by=None, limit=12, offset=0, is_random=False):
     
     or_filters = []
     if title:
@@ -69,11 +74,12 @@ def query_graph(g, title=None, author=None, sort_by=None, limit=12, offset=0, is
         ?author rdf:type :Author ;
             prop:name ?author_name .
         {or_filters}
-    }} group by ?title ?image
+    }} group by ?book_iri ?title ?image
     {sorting_query}
     limit {limit}
     offset {offset}
     """
 
-    result = g.query(query)
+    sparql.setQuery(query)
+    result = sparql.queryAndConvert()
     return process_query_result(result)

@@ -35931,7 +35931,7 @@ prop:title  rdf:type  rdf:Property ;
         rdfs:label  "Burge" ;
         prop:name   "Burge" .
 
-<http://localhost:3333/data#The_DATA_Set_Collection_#2_(Boxed_Set):_A_Case_of_the_Clones;_Invasion_of_the_Insects;_Out_of_Remote_Control;_Down_the_Brain_Drain>
+<http://localhost:3333/data#The_DATA_Set_Collection_2_(Boxed_Set):_A_Case_of_the_Clones;_Invasion_of_the_Insects;_Out_of_Remote_Control;_Down_the_Brain_Drain>
         rdf:type              :Book ;
         rdfs:label            "The DATA Set Collection #2 (Boxed Set): A Case of the Clones; Invasion of the Insects; Out of Remote Control; Down the Brain Drain" ;
         prop:depth            [ prop:unit   "inches" ;
