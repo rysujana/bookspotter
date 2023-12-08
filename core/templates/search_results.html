@@ -55,14 +55,14 @@
            </div>           
           </div>             
          <div class="flex justify-start flex-wrap">
-            {% for result in query_result %}
+            {% for book in query_result %}
             <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4">
                <div class="card">
                   <div class="aspect-w-856 aspect-h-1360">
-                     <img src="{{ result.image|default:'http://lgimages.s3.amazonaws.com/nc-md.gif' }}" alt="{{ result.judul_buku }}" class="rounded-md object-cover">
+                     <img src="{{ book.image|default:'http://lgimages.s3.amazonaws.com/nc-md.gif' }}" alt="{{ book.title }}" class="rounded-md object-cover">
                  </div>
-                 <h2 class="text-base font-semibold line-clamp-2">{{ result.judul_buku }}</h2>
-                  <p class="text-sm mt-2 text-gray-600">{{ result.authors }}</p>
+                 <h2 class="text-base font-semibold line-clamp-2">{{ book.title }}</h2>
+                  <p class="text-sm mt-2 text-gray-600">{{ book.authors }}</p>
                </div>
             </div>
             {% endfor %}
