@@ -116,11 +116,11 @@
       book_image.classList.add("mb-2", "rounded-md", "w-full", "h-40", "object-cover");
 
       const book_title = document.createElement("h2");
-      book_title.classList.add("text-lg", "font-semibold", "line-clamp-2");
+      book_title.classList.add("text-base", "font-semibold", "line-clamp-2");
       book_title.innerText = book.title;
 
       const book_authors = document.createElement("p");
-      book_authors.classList.add("text-sm", "mt-2");
+      book_authors.classList.add("text-sm", "mt-2", "text-gray-600");
       book_authors.innerText = book.authors;
 
       book_link.appendChild(book_image);
