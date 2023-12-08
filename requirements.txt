@@ -5,3 +5,4 @@ django-tailwind==3.6.0
 sqlparse==0.4.4
 typing_extensions==4.8.0
 tzdata==2023.3
+rdflib==7.0.0
