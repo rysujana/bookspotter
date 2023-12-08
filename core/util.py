@@ -146,8 +146,12 @@ def query_graph_iri(iri):
     result = sparql.queryAndConvert()
     result = process_query_result(result)
 
-    book_isbn = result[0]["isbn"]
-    print(book_isbn)
+    
+    
+    book_isbn = result[0].get("isbn")
+    if not book_isbn:
+        return result
+    
     dbo_query = f"""
     prefix dbo: <http://dbpedia.org/ontology/>
     prefix dbp: <http://dbpedia.org/property/>
