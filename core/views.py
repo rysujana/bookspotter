@@ -20,8 +20,6 @@ def home(request):
 def search_results(request):
     if request.method == 'GET':
         input_get = request.GET.get('query')
-        print(input_get)
-        dict_result = {}
         query = prefix+"""
     select ?judul_buku ?nama_author ?image where {{
         ?buku rdf:type :Book ;
@@ -38,14 +36,12 @@ def search_results(request):
         
         
         try:
-            print("test")
-            print(query)
             result = g.query(query)
-            print(result)
-            context = process_query_result(result)
-            return render(request, 'search_results.html', context)
-        except (Exception):
-            print("Error")
+            query_result = process_query_result(result)
+            print(query_result)
+            return render(request, 'search_results.html', {'query_result': query_result})
+        except Exception as e:
+            print(e)
 
         return render(request, 'search_results.html')
 
